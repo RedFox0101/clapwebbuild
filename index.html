@@ -137,8 +137,15 @@
                     analyser.getByteFrequencyData(dataArray);
                     let volume = dataArray.reduce((a, b) => a + b, 0) / dataArray.length / 255;
 
-                    // Отправляем громкость в Unity
-                    unityInstance.SendMessage('ClapDetector', 'ProcessMicrophoneInput', volume);
+                   const clapThreshold = 0.7;
+                   const minClapInterval = 300;
+		   if (!this.lastClapTime) this.lastClapTime = 0;
+		   const currentTime = Date.now();
+                   if (volume > clapThreshold && currentTime - this.lastClapTime > minClapInterval) {
+        // Считаем это хлопком и отправляем данные в Unity
+        unityInstance.SendMessage('ClapDetector', 'ProcessMicrophoneInput', volume);
+        this.lastClapTime = currentTime; // обновляем время последнего хлопка
+    }
 
                     requestAnimationFrame(processAudio);
                 }
