@@ -6,10 +6,36 @@
     <title>Unity WebGL Player | CLAP!</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
+    <style>
+        /* Стили для фиксации ориентации */
+        body {
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(0deg);
+        }
+
+        @media screen and (orientation: landscape) {
+            body {
+                transform: rotate(0deg);
+            }
+        }
+
+        @media screen and (orientation: portrait) {
+            body {
+                transform: rotate(90deg);
+                height: 100vw;
+                width: 100vh;
+            }
+        }
+    </style>
 </head>
 <body>
     <div id="unity-container" class="unity-desktop">
-        <canvas id="unity-canvas" width=350 height=800 tabindex="-1"></canvas>
+        <canvas id="unity-canvas" width="350" height="800" tabindex="-1"></canvas>
         <div id="unity-loading-bar">
             <div id="unity-logo"></div>
             <div id="unity-progress-bar-empty">
@@ -147,6 +173,15 @@
             });
         };
         document.body.appendChild(script);
+
+        // JavaScript для блокировки ориентации
+        function lockOrientation() {
+            if (window.screen.orientation) {
+                window.screen.orientation.lock('landscape'); // или 'portrait' для портретного режима
+            }
+        }
+        window.addEventListener("orientationchange", lockOrientation);
+        window.addEventListener("load", lockOrientation);
     </script>
 </body>
 </html>
